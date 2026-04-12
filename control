@@ -1,0 +1,8 @@
+Package: com.nexoraFF
+Name: Paquetes
+Depends: mobilesubstrate
+Version: 5.0
+Architecture: iphoneos-arm
+Description: PANEL FREE FIRE
+Maintainer: SATOO
+Author: SATOO
