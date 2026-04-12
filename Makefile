@@ -1,6 +1,6 @@
-export THEOS=$(HOME)/theos
-export CC=clang
-export CXX=clang++
+export THEOS = $(HOME)/theos
+export CC = clang
+export CXX = clang++
 
 ARCHS = arm64
 
@@ -18,14 +18,13 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = NexoraFF
 
-$(TWEAK_NAME)_CCFLAGS = -std=c++17 -fno-rtti -DNDEBUG -Wall\ 
--Wno-deprecated-declarations -Wno-unused-variable\
--Wno-unused-value -Wno-unused-function -fvisibility=hidden
+$(TWEAK_NAME)_CCFLAGS = -std=c++17 -fno-rtti -DNDEBUG -Wall \
+-Wno-deprecated-declarations -Wno-unused-variable \
+-Wno-unused-value -Wno-unused-function -fvisibility=hidden \
+-x objective-c++
 
-$(TWEAK_NAME)_CCFLAGS += -x objective-c++
-
-$(TWEAK_NAME)_CFLAGS = -fobjc-arc -Wall 
--Wno-deprecated-declarations -Wno-unused-variable 
+$(TWEAK_NAME)_CFLAGS = -fobjc-arc -Wall \
+-Wno-deprecated-declarations -Wno-unused-variable \
 -Wno-unused-value -Wno-unused-function -fvisibility=hidden -Wno-error
 
 ifeq ($(IGNORE_WARNINGS),1)
@@ -35,12 +34,16 @@ endif
 
 $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation Security QuartzCore CoreGraphics CoreText AVFoundation Accelerate SystemConfiguration SafariServices AudioToolbox GameController
 
-$(TWEAK_NAME)_FILES = ImGuiDrawView.mm
-satooBY.mm
-$(wildcard Esp/.mm) $(wildcard Esp/.m)
-$(wildcard IMGUI/.cpp) $(wildcard IMGUI/.mm)
-FF.mm fishhook.c $(wildcard Hook/.c)
-$(wildcard KittyMemory/.cpp) $(wildcard
-KittyMemory/.mm)
-$(wildcard Soooto/.m)
-$(TWEAK_NAME)_LDFLAGS += -L$(THEOS_PROJECT
+$(TWEAK_NAME)_FILES = ImGuiDrawView.mm \
+satooBY.mm \
+$(wildcard Esp/*.mm) $(wildcard Esp/*.m) \
+$(wildcard IMGUI/*.cpp) $(wildcard IMGUI/*.mm) \
+FF.mm \
+fishhook.c \
+$(wildcard Hook/*.c) \
+$(wildcard KittyMemory/*.cpp) $(wildcard KittyMemory/*.mm) \
+$(wildcard Soooto/*.m)
+
+$(TWEAK_NAME)_LDFLAGS += -L$(THEOS_PROJECT_DIR)/lib
+
+include $(THEOS)/makefiles/tweak.mk
