@@ -1,7 +1,6 @@
-="11111"}
-export THEOS ?= $(HOME)/theos
-export CC = clang
-export CXX = clang++
+export THEOS=$(HOME)/theos
+export CC=clang
+export CXX=clang++
 
 ARCHS = arm64
 
@@ -19,7 +18,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = NexoraFF
 
-# ⚠️ ถ้าไม่มี OLLVM ให้คอมเมนต์บรรทัดนี้
+# ถ้าไม่มี OLLVM ให้คอมเมนต์บรรทัดนี้
 # OBFUSCATION_FLAGS = -mllvm -enable-strcry -mllvm -enable-cffobf -mllvm -enable-bcfobf -mllvm -enable-subobf -mllvm -enable-splitobf
 
 $(TWEAK_NAME)_CCFLAGS = -std=c++17 -fno-rtti -DNDEBUG -Wall 
