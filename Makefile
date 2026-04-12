@@ -35,12 +35,12 @@ endif
 
 $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation Security QuartzCore CoreGraphics CoreText AVFoundation Accelerate SystemConfiguration SafariServices AudioToolbox GameController
 
-$(TWEAK_NAME)_FILES = ImGuiDrawView.mm satooBY.mm 
-$(wildcard Esp/.mm) $(wildcard Esp/.m) 
-$(wildcard IMGUI/.cpp) $(wildcard IMGUI/.mm) 
-FF.mm fishhook.c 
-$(wildcard Hook/.c) 
-$(wildcard KittyMemory/.cpp) $(wildcard KittyMemory/.mm) 
+$(TWEAK_NAME)_FILES = ImGuiDrawView.mm
+satooBY.mm
+$(wildcard Esp/.mm) $(wildcard Esp/.m)
+$(wildcard IMGUI/.cpp) $(wildcard IMGUI/.mm)
+FF.mm fishhook.c $(wildcard Hook/.c)
+$(wildcard KittyMemory/.cpp) $(wildcard
+KittyMemory/.mm)
 $(wildcard Soooto/.m)
-
 $(TWEAK_NAME)_LDFLAGS += -L$(THEOS_PROJECT
