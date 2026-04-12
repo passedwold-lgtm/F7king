@@ -18,7 +18,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = NexoraFF
 
-$(TWEAK_NAME)_CCFLAGS = -std=c++17 -fno-rtti -DNDEBUG -Wall ึ
+$(TWEAK_NAME)_CCFLAGS = -std=c++17 -fno-rtti -DNDEBUG -Wall 
 -Wno-deprecated-declarations -Wno-unused-variable 
 -Wno-unused-value -Wno-unused-function -fvisibility=hidden
 
