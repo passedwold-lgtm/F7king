@@ -2,7 +2,7 @@
 #import <MetalKit/MetalKit.h>
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-#import "Esp/ImGuiDrawView.h"
+#import "ESP/ImGuiDrawView.h"
 #import "IMGUI/imgui.h"
 #import "IMGUI/imgui_impl_metal.h"
 
@@ -68,22 +68,12 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
     self.mtkView.delegate = self;
     self.mtkView.clearColor = MTLClearColorMake(0, 0, 0, 0);
     self.mtkView.backgroundColor = [UIColor clearColor];
-    self.mtkView.userInteractionEnabled = YES;  // สำคัญ!
+    self.mtkView.userInteractionEnabled = YES;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self createButtons];
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    // ให้ปุ่ม Native รับ event ก่อน
-    for (UIView *subview in self.subviews) {
-        if ([subview pointInside:[self convertPoint:point toView:subview] withEvent:event]) {
-            return YES;
-        }
-    }
-    return [super pointInside:point withEvent:event];
 }
 
 - (void)createButtons {
@@ -92,7 +82,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
     CGFloat startY = (kHeight - total) / 2;
     CGFloat centerX = kWidth / 2 - w / 2;
     
-    NSArray *titles = @[@" TeleKill", @" NinjaRun", @" Speed"];
+    NSArray *titles = @[@"🔫 TeleKill", @"👟 NinjaRun", @"⚡ Speed"];
     NSArray *colors = @[[UIColor redColor], [UIColor purpleColor], [UIColor greenColor]];
     
     for (int i = 0; i < 3; i++) {
@@ -102,7 +92,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
         btn.layer.borderWidth = 1.5;
         btn.layer.borderColor = [colors[i] colorWithAlphaComponent:0.7].CGColor;
         [btn addTarget:self action:@selector(buttonDragged:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-        [[UIApplication sharedApplication].keyWindow addSubview:btn];
+        [self.view addSubview:btn];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 10, 70, 25)];
         label.text = titles[i];
@@ -124,7 +114,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
 
 - (void)buttonDragged:(UIButton *)sender withEvent:(UIEvent *)event {
     UITouch *touch = [[event allTouches] anyObject];
-    CGPoint point = [touch locationInView:sender.superview];
+    CGPoint point = [touch locationInView:self.view];
     sender.center = point;
 }
 
@@ -141,7 +131,6 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
     io.DisplaySize.y = view.bounds.size.height;
     io.DeltaTime = 1 / 60.0f;
     
-    // ให้ ImGui ไม่กิน event ทั้งหมด
     io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
     io.MouseDrawCursor = false;
     
@@ -153,7 +142,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
     ImGui_ImplMetal_NewFrame(renderPass);
     ImGui::NewFrame();
     
-    // UI ขนาดใหญ่ขึ้น (900x650)
+    // UI ขนาดใหญ่ 900x650
     CGFloat x = (io.DisplaySize.x - 900) / 2;
     CGFloat y = (io.DisplaySize.y - 650) / 2;
     ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_FirstUseEver);
@@ -202,7 +191,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
                 
                 if (ImGui::Button("📂 Load Config", ImVec2(200, 35))) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Loaded" message:@"Config loaded from game!" preferredStyle:UIAlertControllerStyleAlert];
-                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    [self presentViewController:alert animated:YES completion:nil];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                         [alert dismissViewControllerAnimated:YES completion:nil];
                     });
@@ -210,7 +199,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
                 ImGui::SameLine();
                 if (ImGui::Button("💾 Save Config", ImVec2(200, 35))) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Saved" message:@"Config saved!" preferredStyle:UIAlertControllerStyleAlert];
-                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    [self presentViewController:alert animated:YES completion:nil];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                         [alert dismissViewControllerAnimated:YES completion:nil];
                     });
@@ -225,7 +214,7 @@ const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Hono
                 
                 if (ImGui::Button("🎯 Apply Preset", ImVec2(300, 40))) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Applied" message:[NSString stringWithFormat:@"Preset for %s loaded!", Games[Vars.selectedGame]] preferredStyle:UIAlertControllerStyleAlert];
-                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    [self presentViewController:alert animated:YES completion:nil];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                         [alert dismissViewControllerAnimated:YES completion:nil];
                     });
