@@ -33,17 +33,26 @@ jobs:
         rm -rf $HOME/theos/sdks
         git clone https://github.com/theos/sdks.git $HOME/theos/sdks
 
-    - name: Build Project for iOS 26
+    - name: Build Project
       run: |
         export THEOS=$HOME/theos
         export ARCHS=arm64
         export TARGET=iphone:clang:latest:26
         cd $GITHUB_WORKSPACE
-        make FINALPACKAGE=1
+        make package FINALPACKAGE=1   # <--- เปลี่ยนเป็น make package
+
+    - name: Find and Upload .deb
+      run: |
+        find . -name "*.deb" -print
+      continue-on-error: true
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: iOS-Tweak-Package-iOS26
-        path: packages/*.deb
+        name: NexoraFF-Tweak
+        path: |
+          packages/*.deb
+          *.deb
+          .theos/*.deb
+          **/*.deb
         if-no-files-found: warn
