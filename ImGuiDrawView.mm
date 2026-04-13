@@ -633,12 +633,12 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
     
     static vector<void*> cachedAddresses;
     if (cachedAddresses.empty()) {
-        JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
-        AddrRange range = (AddrRange){0x100000000, 0x160000000};
-        uint64_t search = 4397530849764387586;
-        engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
+        //JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
+        //AddrRange range = (AddrRange){0x100000000, 0x160000000};
+        //uint64_t search = 4397530849764387586;
+        //engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
 
-        cachedAddresses = engine.getAllResults();
+       // cachedAddresses = engine.getAllResults();
     }
 }
 
@@ -692,19 +692,19 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
 
     self.isProcessing = YES;
     
-    JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
-    uint64_t modify = sender.on ? 4510805389574406144 : 4510805389526423306;
+    //JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
+    //uint64_t modify = sender.on ? 4510805389574406144 : 4510805389526423306;
 
-    static vector<void*> cachedAddresses;
-    if (cachedAddresses.empty()) {
-        AddrRange range = (AddrRange){0x100000000, 0x160000000};
-        uint64_t search = 4510805389526423306;
-        engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
-        cachedAddresses = engine.getAllResults();
+    //static vector<void*> cachedAddresses;
+    //if (cachedAddresses.empty()) {
+        //AddrRange range = (AddrRange){0x100000000, 0x160000000};
+       // uint64_t search = 4510805389526423306;
+       // engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
+       //cachedAddresses = engine.getAllResults();
     }
 
-    for (int i = 0; i < cachedAddresses.size(); i++) {
-        engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
+    //for (int i = 0; i < cachedAddresses.size(); i++) {
+       // engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
     }
     
     self.isProcessing = NO;
@@ -718,19 +718,19 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
 
     self.isProcessing = YES;
     
-    JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
-    uint64_t modify = sender.on ? 4366458311853765201 : 4397530849764387586;
+    //JRMemoryEngine engine = JRMemoryEngine(mach_task_self());
+    //uint64_t modify = sender.on ? 4366458311853765201 : 4397530849764387586;
 
-    static vector<void*> cachedAddresses;
-    if (cachedAddresses.empty()) {
-        AddrRange range = (AddrRange){0x100000000, 0x160000000};
-        uint64_t search = 4397530849764387586;
-        engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
-        cachedAddresses = engine.getAllResults();
+    //static vector<void*> cachedAddresses;
+   // if (cachedAddresses.empty()) {
+      //  AddrRange range = (AddrRange){0x100000000, 0x160000000};
+       // uint64_t search = 4397530849764387586;
+       // engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
+       // cachedAddresses = engine.getAllResults();
     }
 
-    for (int i = 0; i < cachedAddresses.size(); i++) {
-        engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
+   // for (int i = 0; i < cachedAddresses.size(); i++) {
+      //  engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
     }
     
     self.isProcessing = NO;
