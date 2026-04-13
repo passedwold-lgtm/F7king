@@ -639,8 +639,8 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
         //engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
 
        // cachedAddresses = engine.getAllResults();
-    }
-}
+    //}
+//}
 
 - (void)teleKillSwitchChanged:(UISwitch *)sender {
     Vars.Telekill = sender.on;
@@ -701,11 +701,11 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
        // uint64_t search = 4510805389526423306;
        // engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
        //cachedAddresses = engine.getAllResults();
-    }
+    //}
 
     //for (int i = 0; i < cachedAddresses.size(); i++) {
        // engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
-    }
+    //}
     
     self.isProcessing = NO;
 }
@@ -727,11 +727,11 @@ static float networkColor[3] = {1.0f, 1.0f, 1.0f};
        // uint64_t search = 4397530849764387586;
        // engine.JRScanMemory(range, &search, JR_Search_Type_ULong);
        // cachedAddresses = engine.getAllResults();
-    }
+   // }
 
    // for (int i = 0; i < cachedAddresses.size(); i++) {
       //  engine.JRWriteMemory((unsigned long long)(cachedAddresses[i]), &modify, JR_Search_Type_ULong);
-    }
+    //}
     
     self.isProcessing = NO;
 }
