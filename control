@@ -1,5 +1,5 @@
-Package: com.nexoraFF
-Name: Paquetes
+Package: com.nexoraff
+Name: nexoraFF
 Depends: mobilesubstrate
 Version: 5.0
 Architecture: iphoneos-arm
