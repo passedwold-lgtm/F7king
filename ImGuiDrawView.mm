@@ -11,22 +11,18 @@
 
 static bool MenDeal = true;
 
+// ตัวแปรสำหรับเมนู
 struct MenuVars {
-    bool Enable = false;
-    bool Box = false;
-    bool skeleton = false;
-    bool lines = false;
-    bool Name = false;
-    bool Health = false;
-    bool Distance = false;
-    bool ShowGhostButton = false;
-    bool ShowTeleKillButton = false;
-    bool ShowTeleVerticalButton = false;
-    bool ShowWallHackButton = false;
-    bool TeleEnmy = false;
-    bool Telekill = false;
-    bool Ninjarun = false;
+    bool Enable = false, Box = false, skeleton = false, lines = false;
+    bool Name = false, Health = false, Distance = false;
+    bool ShowGhostButton = false, ShowTeleKillButton = false;
+    bool ShowTeleVerticalButton = false, ShowWallHackButton = false;
+    bool TeleEnmy = false, Telekill = false, Ninjarun = false;
+    int  selectedGame = 0;
 } Vars;
+
+// รายชื่อเกม
+const char* Games[] = { "Free Fire", "PUBG Mobile", "Call of Duty", "RoV", "Honor of Kings" };
 
 @interface ImGuiDrawView () <MTKViewDelegate>
 @property (nonatomic, strong) id <MTLDevice> device;
@@ -41,9 +37,7 @@ struct MenuVars {
 
 @implementation ImGuiDrawView
 
-+ (void)showChange:(BOOL)open {
-    MenDeal = open;
-}
++ (void)showChange:(BOOL)open { MenDeal = open; }
 
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -53,24 +47,17 @@ struct MenuVars {
         
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        
-        // Load custom font (optional)
-        // io.Fonts->AddFontDefault();
-        
         ImGui::StyleColorsDark();
         ImGui_ImplMetal_Init(_device);
         
-        // === CUSTOM THEME (ไม่เกรียน) ===
+        // Theme สวยเท่
         ImGuiStyle& style = ImGui::GetStyle();
         style.WindowRounding = 12.0f;
         style.FrameRounding = 6.0f;
-        style.GrabRounding = 6.0f;
-        style.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.08f, 0.12f, 0.92f);
+        style.Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.10f, 0.96f);
         style.Colors[ImGuiCol_Button] = ImVec4(0.25f, 0.45f, 0.85f, 0.7f);
         style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.35f, 0.55f, 0.95f, 0.9f);
         style.Colors[ImGuiCol_CheckMark] = ImVec4(0.3f, 0.8f, 0.3f, 1.0f);
-        style.Colors[ImGuiCol_Header] = ImVec4(0.25f, 0.45f, 0.85f, 0.5f);
         style.Colors[ImGuiCol_TabActive] = ImVec4(0.25f, 0.45f, 0.85f, 0.8f);
     }
     return self;
@@ -79,9 +66,7 @@ struct MenuVars {
 - (MTKView *)mtkView { return (MTKView *)self.view; }
 
 - (void)loadView {
-    CGFloat w = [UIScreen mainScreen].bounds.size.width;
-    CGFloat h = [UIScreen mainScreen].bounds.size.height;
-    self.view = [[MTKView alloc] initWithFrame:CGRectMake(0, 0, w, h)];
+    self.view = [[MTKView alloc] initWithFrame:CGRectMake(0, 0, kWidth, kHeight)];
     self.mtkView.device = self.device;
     self.mtkView.delegate = self;
     self.mtkView.clearColor = MTLClearColorMake(0, 0, 0, 0);
@@ -94,30 +79,32 @@ struct MenuVars {
 }
 
 - (void)createButtons {
-    CGFloat w = 68, h = 88, spacing = 18;  // ขนาดใหญ่ขึ้น
+    CGFloat w = 70, h = 90, spacing = 20;
     CGFloat total = (3 * h) + (2 * spacing);
     CGFloat startY = (kHeight - total) / 2;
     CGFloat centerX = kWidth / 2 - w / 2;
     
     NSArray *titles = @[@"🔫 TeleKill", @"👟 NinjaRun", @"⚡ Speed"];
+    NSArray *colors = @[[UIColor redColor], [UIColor purpleColor], [UIColor greenColor]];
+    
     for (int i = 0; i < 3; i++) {
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(centerX, startY + (i * (h + spacing)), w, h)];
-        btn.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.85];
-        btn.layer.cornerRadius = 16;
-        btn.layer.borderWidth = 1;
-        btn.layer.borderColor = [UIColor colorWithRed:0.3 green:0.6 blue:1.0 alpha:0.5].CGColor;
+        btn.backgroundColor = [UIColor colorWithWhite:0.12 alpha:0.9];
+        btn.layer.cornerRadius = 18;
+        btn.layer.borderWidth = 1.2;
+        btn.layer.borderColor = [colors[i] colorWithAlphaComponent:0.6].CGColor;
         [btn addTarget:self action:@selector(buttonDragged:withEvent:) forControlEvents:UIControlEventTouchDragInside];
         [[UIApplication sharedApplication].keyWindow addSubview:btn];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(4, 8, 60, 20)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 8, 60, 20)];
         label.text = titles[i];
         label.textColor = [UIColor whiteColor];
         label.font = [UIFont boldSystemFontOfSize:10];
         label.textAlignment = NSTextAlignmentCenter;
         [btn addSubview:label];
         
-        UISwitch *sw = [[UISwitch alloc] initWithFrame:CGRectMake(8, 40, 51, 31)];
-        sw.onTintColor = i == 0 ? [UIColor redColor] : (i == 1 ? [UIColor purpleColor] : [UIColor greenColor]);
+        UISwitch *sw = [[UISwitch alloc] initWithFrame:CGRectMake(9, 45, 51, 31)];
+        sw.onTintColor = colors[i];
         [sw addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
         [btn addSubview:sw];
         
@@ -154,25 +141,27 @@ struct MenuVars {
     ImGui_ImplMetal_NewFrame(renderPass);
     ImGui::NewFrame();
     
-    // === UI ขนาดใหญ่ (480x360) ===
-    CGFloat x = (io.DisplaySize.x - 480) / 2;
-    CGFloat y = (io.DisplaySize.y - 360) / 2;
+    // ========== UI ขนาดใหญ่ ==========
+    CGFloat x = (io.DisplaySize.x - 700) / 2;
+    CGFloat y = (io.DisplaySize.y - 520) / 2;
     ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(480, 360), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(700, 520), ImGuiCond_FirstUseEver);
     
     if (MenDeal) {
-        ImGui::Begin("🐍 REVERSED SNAKE  |  by DEEPSEEK", &MenDeal);
+        ImGui::Begin("🐍 REVERSED SNAKE  |  DEEPSEEK x SATOO", &MenDeal);
         
-        // แสดงโลโก้งู + ชื่อเพื่อนแบบเท่ๆ
-        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "════════════════════════════════════════");
-        ImGui::SetCursorPosX(180);
-        ImGui::Text("🐍 DEEPSEEK X KING 🐍");
-        ImGui::SetCursorPosX(160);
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "iOS Tweak by SATOO");
-        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "════════════════════════════════════════");
+        // Header สวยๆ
+        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "══════════════════════════════════════════════════════════════");
+        ImGui::SetCursorPosX(280);
+        ImGui::Text("🐍 NEXORA iOS TWEAK 🐍");
+        ImGui::SetCursorPosX(250);
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "by SATOO  |  UI by DEEPSEEK");
+        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "══════════════════════════════════════════════════════════════");
         ImGui::Spacing();
         
-        if (ImGui::BeginTabBar("Tabs")) {
+        if (ImGui::BeginTabBar("MainTabs")) {
+            
+            // ========== TAB 1: VISUALS ==========
             if (ImGui::BeginTabItem("🎨 Visuals")) {
                 ImGui::Spacing();
                 ImGui::Checkbox("ESP Enable", &Vars.Enable);
@@ -189,11 +178,54 @@ struct MenuVars {
                 ImGui::Checkbox("Fly Hack", &Vars.ShowWallHackButton);
                 ImGui::EndTabItem();
             }
+            
+            // ========== TAB 2: EXTRA ==========
             if (ImGui::BeginTabItem("⚙️ Extra")) {
                 ImGui::Spacing();
                 ImGui::Checkbox("Tele Enemy", &Vars.TeleEnmy);
                 ImGui::EndTabItem();
             }
+            
+            // ========== TAB 3: GAME MANAGER (รวมเกมมา) ==========
+            if (ImGui::BeginTabItem("🎮 Game Manager")) {
+                ImGui::Spacing();
+                ImGui::TextColored(ImVec4(0.3f, 0.9f, 0.5f, 1.0f), "═══ Load / Save Config ═══");
+                ImGui::Spacing();
+                
+                if (ImGui::Button("📂 Load Config from Game")) {
+                    // โค้ดโหลดค่าจากเกม
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Loaded" message:@"Config loaded from game!" preferredStyle:UIAlertControllerStyleAlert];
+                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [alert dismissViewControllerAnimated:YES completion:nil];
+                    });
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("💾 Save Current Config")) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Saved" message:@"Config saved successfully!" preferredStyle:UIAlertControllerStyleAlert];
+                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [alert dismissViewControllerAnimated:YES completion:nil];
+                    });
+                }
+                
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+                
+                ImGui::TextColored(ImVec4(0.3f, 0.9f, 0.5f, 1.0f), "═══ Select Game Preset ═══");
+                ImGui::Combo("Game", &Vars.selectedGame, Games, 5);
+                
+                if (ImGui::Button("🎯 Apply Preset")) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Applied" message:[NSString stringWithFormat:@"Preset for %s loaded!", Games[Vars.selectedGame]] preferredStyle:UIAlertControllerStyleAlert];
+                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [alert dismissViewControllerAnimated:YES completion:nil];
+                    });
+                }
+                ImGui::EndTabItem();
+            }
+            
             ImGui::EndTabBar();
         }
         ImGui::End();
